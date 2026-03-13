@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import teccr.justdoitcloud.data.Task;
 import teccr.justdoitcloud.data.User;
 import teccr.justdoitcloud.service.TaskService;
-import teccr.justdoitcloud.service.UserService;
 
 import java.util.Optional;
 
@@ -16,7 +15,7 @@ public class TasksController {
 
     private final TaskService taskService;
 
-    public TasksController(TaskService taskService, UserService userService) {
+    public TasksController(TaskService taskService) {
         this.taskService = taskService;
     }
 
@@ -29,11 +28,24 @@ public class TasksController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Task addTaskToUser(@PathVariable Long userId, @RequestBody Task task) {
+    public Task addTaskToUser(@PathVariable Long userId,
+                              @RequestBody(required = false) Task task,
+                              @RequestParam(name = "autogenerate", required = false) String autogenerate) {
         User user = new User();
         user.setId(userId);
-        taskService.addTaskToUser(user, task);
-        return task;
+
+        boolean auto = autogenerate != null && (autogenerate.isEmpty() || autogenerate.equalsIgnoreCase("true"));
+
+        if (auto) {
+            // Ignorar el cuerpo y usar el generador para crear la tarea
+            return taskService.autogenerateTaskForUser(user);
+        }
+
+        // Flujo normal: crear usando el Task provisto en el body
+        if (task == null) {
+            throw new IllegalArgumentException("Task body is required when autogenerate is not used");
+        }
+        return taskService.addTaskToUser(user, task);
     }
 
     @GetMapping("/{id}")

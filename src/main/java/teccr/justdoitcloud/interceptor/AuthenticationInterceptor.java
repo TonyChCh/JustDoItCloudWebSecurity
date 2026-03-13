@@ -38,6 +38,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 || path.startsWith("/login")
                 || path.startsWith("/css/")
                 || path.startsWith("/images/")
+                || path.startsWith("/error")
                 || path.startsWith("/api/"); // Allow API paths to be public for now, can be changed later
 
     }

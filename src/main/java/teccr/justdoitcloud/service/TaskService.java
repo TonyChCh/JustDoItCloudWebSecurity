@@ -1,21 +1,35 @@
 package teccr.justdoitcloud.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import teccr.justdoitcloud.data.Task;
 import teccr.justdoitcloud.data.User;
 import teccr.justdoitcloud.repository.TaskRepository;
+import teccr.justdoitcloud.repository.UserRepository;
+import teccr.justdoitcloud.service.external.taskarchiver.TaskArchiver;
+import teccr.justdoitcloud.service.external.taskgenerator.TaskGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskGenerator taskGenerator;
+    private final UserRepository userRepository;
+    private final TaskArchiver taskArchiver;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository,
+                       TaskGenerator taskGenerator,
+                       UserRepository userRepository,
+                       TaskArchiver taskArchiver) {
         this.taskRepository = taskRepository;
+        this.taskGenerator = taskGenerator;
+        this.userRepository = userRepository;
+        this.taskArchiver = taskArchiver;
     }
 
     public List<Task> getTasksForUser(User user) {
@@ -25,6 +39,19 @@ public class TaskService {
     public Task addTaskToUser(User user, Task task) {
         task.setUserId(user.getId());
         task.setCreatedAt(LocalDateTime.now());
+        return taskRepository.save(task);
+    }
+
+    public Task autogenerateTaskForUser(User user) {
+
+        Task task = taskGenerator.generateTask();
+        if (task == null) {
+            throw new RuntimeException("No se pudo generar la tarea automáticamente");
+        }
+
+        task.setUserId(user.getId());
+        task.setCreatedAt(LocalDateTime.now());
+
         return taskRepository.save(task);
     }
 
@@ -50,6 +77,23 @@ public class TaskService {
     }
 
     public void deleteTaskById(Long id) {
+        Optional<Task> maybeTask = taskRepository.findById(id);
+        if (maybeTask.isEmpty()) {
+            throw new RuntimeException("Task not found with id: " + id);
+        }
+
+        Task task = maybeTask.get();
+
+        Optional<User> maybeUser = userRepository.findById(task.getUserId());
+        maybeUser.ifPresent(user -> {
+            try {
+                taskArchiver.archiveTask(user, task);
+            } catch (Exception ignored) {
+                log.error("Error archiving task with id {} for user id {}: {}", task.getId(), user.getId(), ignored.getMessage());
+            }
+        });
+
         taskRepository.deleteById(id);
     }
+
 }
