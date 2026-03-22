@@ -2,6 +2,7 @@ package teccr.justdoitcloud.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
 @Slf4j
 @Controller
 @RequestMapping("/user/tasks")
-@SessionAttributes("user")
 public class UserTasksController {
 
     private final TaskService taskService;
@@ -25,12 +25,12 @@ public class UserTasksController {
     }
 
     @GetMapping
-    public String showUserTasks(Model model) {
+    public String showUserTasks(Model model, @AuthenticationPrincipal User user) {
         Task task = new Task();
         task.setStatus(Task.Status.INPROGRESS);
         model.addAttribute("newTask", task);
+        model.addAttribute("user", user);
         // Retrieve user tasks and add to user object in session
-        User user = (User) model.getAttribute("user");
         if (user != null) {
             user.setTasks(taskService.getTasksForUser(user));
         }
@@ -41,7 +41,7 @@ public class UserTasksController {
     @PostMapping
     public String addTask(@Valid @ModelAttribute(name = "newTask") Task newTask,
                           Errors errors,
-                          @ModelAttribute("user") User user) {
+                          @AuthenticationPrincipal User user) {
         log.info("Adding task: " + newTask);
         if (errors.hasErrors()) {
             return "usertasks";

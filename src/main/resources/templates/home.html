@@ -31,7 +31,11 @@
         <form th:action="@{/login}" method="post" class="login-form">
             <div>
                 <label for="username">Usuario</label>
-                <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required />
+                <input type="text" id="username" name="username"  required />
+            </div>
+            <div>
+                <label for="username">Password</label>
+                <input type="password" id="password" name="password" required />
             </div>
             <div>
                 <button type="submit">Ingresar</button>

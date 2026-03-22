@@ -26,7 +26,9 @@
                     <strong>Tareas de usuario actual</strong>
                 </li>
                 <li>
-                    <a th:href="@{/logout}">Cerrar sesión</a>
+                    <form th:action="@{/logout}" method="post" style="display:inline">
+                        <button type="submit" class="link-button">Cerrar sesión</button>
+                    </form>
                 </li>
             </ul>
         </nav>
@@ -40,7 +42,7 @@
         <div class="user-card">
             <div class="user-avatar" th:text="${user.name != null} ? ${user.name.substring(0,1)} : 'U'">U</div>
             <div class="user-info">
-                <div><strong th:text="${user.name}">Nombre Usuario</strong> <span style="color:#666">(<span th:text="${user.userName}">username</span>)</span></div>
+                <div><strong th:text="${user.name}">Nombre Usuario</strong> <span style="color:#666">(<span th:text="${user.username}">username</span>)</span></div>
                 <div>Email: <span th:text="${user.email}">email@example.com</span></div>
                 <div>Tipo: <span th:text="${user.type}">REGULAR</span></div>
             </div>
@@ -55,7 +57,7 @@
                 <div th:if="${#lists.isEmpty(user.tasks.?[status.name() == 'PENDING'])}">
                     No hay tareas pendientes.
                 </div>
-                <form  method="POST" class="new-task-form" th:object="${newTask}">
+                <form  method="POST" th:action="@{/user/tasks}" class="new-task-form" th:object="${newTask}">
                     <!-- Solo capturamos la descripción -->
                     <label for="description">Nueva tarea:</label>
                     <input th:field="*{description}" type="text" placeholder="Describe la tarea..."

@@ -1,5 +1,6 @@
 package teccr.justdoitcloud.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import teccr.justdoitcloud.data.User;
 import teccr.justdoitcloud.repository.UserRepository;
@@ -14,10 +15,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // Constructor injection of UserRepository
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -47,6 +50,7 @@ public class UserService {
 
     public User createUser(User user) {
         user.setCreatedAt(LocalDateTime.now());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -61,6 +65,9 @@ public class UserService {
                     }
                     if (updatedUser.getType() != null) {
                         existingUser.setType(updatedUser.getType());
+                    }
+                    if (updatedUser.getPassword() != null && !updatedUser.getPassword().trim().isEmpty()) {
+                        existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
                     }
                     return userRepository.save(existingUser);
                 })

@@ -28,7 +28,7 @@ public class TimingInterceptor implements HandlerInterceptor {
             long end = System.nanoTime();
             double seconds = (end - start) / 1_000_000_000.0;
 
-//            log.info("Handler {} executed in {} seconds", handler.toString(), String.format("%.4f", seconds));
+            log.info("Handler {} executed in {} seconds", handler.toString(), String.format("%.4f", seconds));
         }
     }
 }

@@ -1,5 +1,5 @@
-INSERT INTO users (user_name, name, email, type)
-VALUES ('john_doe', 'John Doe','john@gmail.com', 'REGULAR')
+INSERT INTO users (user_name, password, name, email, type)
+VALUES ('john_doe', '', 'John Doe','john@gmail.com', 'REGULAR')
 ON DUPLICATE KEY UPDATE user_name = user_name;
 
 -- Insertar dos tareas para 'alice' de forma idempotente
