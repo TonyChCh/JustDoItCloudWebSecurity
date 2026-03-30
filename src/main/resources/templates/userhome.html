@@ -31,6 +31,9 @@
                 <li>
                     <a th:href="@{/user/tasks}">Tareas de usuario actual</a>
                 </li>
+                <li th:if="${user.type.name() == 'ADMIN'}">
+                    <a th:href="@{/admin}">Admin managing</a>
+                </li>
                 <li>
                     <form th:action="@{/logout}" method="post" style="display:inline">
                         <button type="submit" class="link-button">Cerrar sesión</button>

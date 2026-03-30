@@ -51,13 +51,19 @@
      margin-bottom: 8px;
  }
 
- .navigation a {
+.navigation .link-button {
+    all: unset;
+}
+
+ .navigation a,
+ .navigation .link-button {
      color: #cfe2ff;
      text-decoration: none;
      font-size: 0.95rem;
  }
 
- .navigation a:hover {
+ .navigation a:hover,
+ .navigation .link-button:hover {
      text-decoration: underline;
  }
 

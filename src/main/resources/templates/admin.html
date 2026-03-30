@@ -26,10 +26,13 @@
             <h3>Opciones</h3>
             <ul>
                 <li>
-                    <strong>Inicio</strong>
+                    <a th:href="@{/user/home}">Inicio</a>
                 </li>
                 <li>
                     <a th:href="@{/user/tasks}">Tareas de usuario actual</a>
+                </li>
+                <li>
+                    <strong>Admin managing</strong>
                 </li>
                 <li>
                     <form th:action="@{/logout}" method="post" style="display:inline">
