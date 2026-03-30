@@ -24,6 +24,8 @@ public class UserTasksController {
 
     @GetMapping
     public String showUserTasks(Model model, @AuthenticationPrincipal User user) {
+        // Se debe crear un objeto vacio para poder armar en el formulario
+        // Es crucial agregarlo al atributo del modelo (newUser & newTask) para poder recibirlo en el POST
         Task task = new Task();
         task.setStatus(Task.Status.INPROGRESS);
         model.addAttribute("newTask", task);

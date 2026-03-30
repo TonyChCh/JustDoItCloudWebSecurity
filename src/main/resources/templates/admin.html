@@ -50,7 +50,11 @@
 
         <div class="form-container">
             <h2>Crear Usuarios</h2>
-
+            <!-- Cuando usas th:object="${newUser}" en tu formulario, Thymeleaf necesita que exista un objeto
+            newUser en el modelo. Sin él, el formulario no puede funcionar.
+            El formulario se muestra con valores por defecto (userName = "", password = "")
+            Cuando hace el submit agarra el objeto vacio y lo arma para ser procesado en el POST
+            -->
             <form method="POST" th:action="@{/admin/createuser}" class="new-user-form" th:object="${newUser}">
                 <div class="form-group">
                     <label>Username</label>

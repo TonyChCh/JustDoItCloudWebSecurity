@@ -60,6 +60,11 @@
                 <div th:if="${#lists.isEmpty(user.tasks.?[status.name() == 'PENDING'])}">
                     No hay tareas pendientes.
                 </div>
+                <!-- Cuando usas th:object="${newTask}" en tu formulario, Thymeleaf necesita que exista un objeto
+                newUser en el modelo. Sin él, el formulario no puede funcionar.
+                El formulario se muestra con valores por defecto  (status = INPROGRESS, description = "", deadline = null)
+                Cuando hace el submit agarra el objeto vacio y lo arma para ser procesado en el POST
+                -->
                 <form  method="POST" th:action="@{/user/tasks}" class="new-task-form" th:object="${newTask}">
                     <!-- Solo capturamos la descripción -->
                     <label for="description">Nueva tarea:</label>

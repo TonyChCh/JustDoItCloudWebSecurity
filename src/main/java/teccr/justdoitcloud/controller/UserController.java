@@ -22,8 +22,11 @@ public class UserController {
 
     @GetMapping
     public String showAdminManaging(Model model, @AuthenticationPrincipal User user) {
+        // Se debe crear un objeto vacio para poder armar en el formulario
+        // Es crucial agregarlo al atributo del modelo (newUser & newTask) para poder recibirlo en el POST
         User newuser = new User();
         model.addAttribute("newUser", newuser);
+        model.addAttribute("user", user);
         return "admin";
     }
 
