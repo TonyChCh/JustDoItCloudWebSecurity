@@ -40,8 +40,10 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return getUserName();
     }
+
+    public String getUserName() { return userName; }
 
     public enum Type {
         ADMIN,

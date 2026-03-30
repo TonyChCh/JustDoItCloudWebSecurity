@@ -63,8 +63,7 @@
                 <form  method="POST" th:action="@{/user/tasks}" class="new-task-form" th:object="${newTask}">
                     <!-- Solo capturamos la descripción -->
                     <label for="description">Nueva tarea:</label>
-                    <input th:field="*{description}" type="text" placeholder="Describe la tarea..."
-                    />
+                    <input th:field="*{description}" type="text" placeholder="Describe la tarea..."/>
                     <span class="validationError"
                           th:if="${#fields.hasErrors('description')}"
                           th:errors="*{description}">Desc error</span>
